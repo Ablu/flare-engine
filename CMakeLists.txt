@@ -48,6 +48,8 @@ EndIf(NOT IS_ABSOLUTE "${DATADIR}")
 
 # Detect missing dependencies
 
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/)
+
 Find_Package (SDL REQUIRED)
 If (NOT SDL_FOUND)
   Message (FATAL_ERROR "Couldn't find SDL development files. On Debian-based systems (such as Ubuntu) you should install the 'libsdl1.2-dev' package.")
@@ -75,6 +77,13 @@ If (NOT SDLTTF_FOUND)
 Else (NOT SDLTTF_FOUND)
   Include_Directories (${SDLTTF_INCLUDE_DIR})
 EndIf (NOT SDLTTF_FOUND)
+
+Find_Package (SDL_gfx REQUIRED)
+If (NOT SDLGFX_FOUND)
+  Message (FATAL_ERROR "Couldn't find SDL-gfx development files.")
+Else (NOT SDLGFX_FOUND)
+    Include_Directories (${SDL_gfx_INCLUDE_DIR})
+EndIf (NOT SDLGFX_FOUND)
 
 
 # Sources
@@ -145,7 +154,6 @@ Set (FLARE_SOURCES
 	./src/PowerManager.cpp
 	./src/QuestLog.cpp
 	./src/SaveLoad.cpp
-	./src/SDL_gfxBlitFunc.c
 	./src/Settings.cpp
 	./src/SharedGameResources.cpp
 	./src/SharedResources.cpp
@@ -188,7 +196,7 @@ If (NOT SDLMAIN_LIBRARY)
   Set (SDLMAIN_LIBRARY "")
 EndIf (NOT SDLMAIN_LIBRARY)
 
-Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} ${SDLMAIN_LIBRARY})
+Target_Link_Libraries (flare ${CMAKE_LD_FLAGS} ${SDL_LIBRARY} ${SDLMIXER_LIBRARY} ${SDLIMAGE_LIBRARY} ${SDLTTF_LIBRARY} ${SDLMAIN_LIBRARY} ${SDLGFX_LIBRARIES})
 
 
 # installing to the proper places
